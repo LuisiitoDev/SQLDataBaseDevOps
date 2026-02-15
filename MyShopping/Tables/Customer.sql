@@ -1,0 +1,5 @@
+﻿CREATE TABLE [dbo].[Customer]
+(
+	[Id] BIGINT NOT NULL CONSTRAINT PK_Customer PRIMARY KEY,
+	[Name] VARCHAR(255) NOT NULL,
+)
