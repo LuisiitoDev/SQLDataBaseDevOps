@@ -6,6 +6,9 @@ on:
     types:
       - completed
 
+permissions:
+  actions: read
+  contents: read
 
 jobs:
 
