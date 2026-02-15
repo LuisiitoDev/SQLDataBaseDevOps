@@ -3,7 +3,7 @@ name: Database CI - Build DACPAC
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
 
 jobs:
