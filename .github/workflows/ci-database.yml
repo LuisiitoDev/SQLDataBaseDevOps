@@ -20,11 +20,11 @@ jobs:
 
       - name: Build SQL Project
         run: |
-          msbuild src/DatabaseProject/DatabaseProject.sqlproj `
+          msbuild ./MyShopping/MyShopping.sqlproj `
             /p:Configuration=Release
 
       - name: Upload DACPAC Artifact
         uses: actions/upload-artifact@v4
         with:
           name: dacpac
-          path: src/DatabaseProject/bin/Release/*.dacpac
+          path: ./MyShopping/bin/Release/*.dacpac
