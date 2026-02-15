@@ -1,0 +1,30 @@
+name: Database CI - Build DACPAC
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    name: Build SQL Project
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1
+
+      - name: Build SQL Project
+        run: |
+          msbuild src/DatabaseProject/DatabaseProject.sqlproj `
+            /p:Configuration=Release
+
+      - name: Upload DACPAC Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dacpac
+          path: src/DatabaseProject/bin/Release/*.dacpac

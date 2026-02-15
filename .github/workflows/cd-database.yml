@@ -1,0 +1,50 @@
+name: Database CD - Deploy
+
+on:
+  workflow_run:
+    workflows: ["Database CI - Build DACPAC"]
+    types:
+      - completed
+
+
+jobs:
+
+  deploy-development:
+    name: Deploy to Development
+    runs-on: windows-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    environment: Production
+    
+    steps:
+      - name: Download DACPAC Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dacpac
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Install SqlPackage
+        run: choco install sqlpackage -y
+
+      - name: Deploy to Development
+        shell: pwsh
+        run: |
+          $token = az account get-access-token `
+            --resource https://database.windows.net/ `
+            --query accessToken -o tsv
+
+          $dacpac = Get-ChildItem -Filter *.dacpac | Select-Object -First 1
+
+          SqlPackage.exe /Action:Publish `
+            /SourceFile:$dacpac.FullName `
+            /TargetServerName:${{ secrets.AZURE_SQL_SERVER }} `
+            /TargetDatabaseName:${{ secrets.AZURE_SQL_DATABASE }} `
+            /AccessToken:$token `
+            /p:BlockOnPossibleDataLoss=true
+
