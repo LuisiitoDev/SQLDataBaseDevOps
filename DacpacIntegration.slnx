@@ -1,5 +1,5 @@
 <Solution>
-  <Project Path="MyShopping/MyShopping.sqlproj">
+  <Project Path="MyShopping/MyShopping.sqlproj" Id="f4546a09-5102-45be-a23d-8dfc039a1d4e">
     <Build />
     <Deploy />
   </Project>
