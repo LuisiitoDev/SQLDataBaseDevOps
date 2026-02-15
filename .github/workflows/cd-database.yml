@@ -44,11 +44,21 @@ jobs:
           $token = az account get-access-token `
             --resource https://database.windows.net/ `
             --query accessToken -o tsv
-
-          $dacpac = Get-ChildItem -Filter *.dacpac | Select-Object -First 1
-
+            
+          Write-Host "Current directory: $(Get-Location)"
+          Write-Host "Files in current directory:"
+          Get-ChildItem -Recurse
+          
+          # Find the dacpac file
+          $dacpac = Get-ChildItem -Filter *.dacpac -Recurse | Select-Object -First 1
+          
+          if ($null -eq $dacpac) {
+            Write-Error "No .dacpac file found!"
+            exit 1
+          }
+          Write-Host "Found DACPAC: $($dacpac.FullName)"
           SqlPackage.exe /Action:Publish `
-            /SourceFile:$dacpac.FullName `
+            /SourceFile:"$($dacpac.FullName)" `
             /TargetServerName:${{ secrets.AZURE_SQL_SERVER }} `
             /TargetDatabaseName:${{ secrets.AZURE_SQL_DATABASE }} `
             /AccessToken:$token `
