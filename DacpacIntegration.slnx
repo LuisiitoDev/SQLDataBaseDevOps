@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="MyShopping/MyShopping.sqlproj">
+    <Build />
+    <Deploy />
+  </Project>
+</Solution>
