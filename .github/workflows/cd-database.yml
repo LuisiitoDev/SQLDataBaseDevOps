@@ -24,7 +24,7 @@ jobs:
         with:
           name: dacpac
           run-id: ${{ github.event.workflow_run.id }}
-          gitub-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
 
       - name: Azure Login
