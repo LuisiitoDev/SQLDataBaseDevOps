@@ -45,10 +45,6 @@ jobs:
             --resource https://database.windows.net/ `
             --query accessToken -o tsv
             
-          Write-Host "Current directory: $(Get-Location)"
-          Write-Host "Files in current directory:"
-          Get-ChildItem -Recurse
-          
           # Find the dacpac file
           $dacpac = Get-ChildItem -Filter *.dacpac -Recurse | Select-Object -First 1
           
@@ -56,7 +52,7 @@ jobs:
             Write-Error "No .dacpac file found!"
             exit 1
           }
-          Write-Host "Found DACPAC: $($dacpac.FullName)"
+          
           SqlPackage.exe /Action:Publish `
             /SourceFile:"$($dacpac.FullName)" `
             /TargetServerName:${{ secrets.AZURE_SQL_SERVER }} `
